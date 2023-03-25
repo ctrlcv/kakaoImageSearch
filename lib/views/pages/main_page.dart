@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:threedotthree/pages/tabs/image_favorite_tab.dart';
-import 'package:threedotthree/pages/tabs/image_list_tab.dart';
+import 'package:get/get.dart';
+import 'package:threedotthree/views/image_search_list_view.dart';
+
+import '../../controllers/favorite_controller.dart';
+import '../../controllers/image_controller.dart';
+import '../favorite_list_view.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -18,6 +22,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: 2);
+
+    Get.put(ImageController());
+    Get.put(FavoriteController());
+
     super.initState();
   }
 
@@ -25,34 +33,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Scaffold(
-        body: Column(
-          children: [
-            SizedBox(height: MediaQuery.of(context).viewPadding.top),
-            Expanded(
-              child: DefaultTabController(
-                length: 2,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: const [
-                    ImageListTab(),
-                    ImageFavoriteTab(),
-                  ],
-                ),
-              ),
-            ),
-            buildTabBar(),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget buildTabBar() {
@@ -80,6 +60,34 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           Tab(icon: Icon(CupertinoIcons.list_bullet)),
           Tab(icon: Icon(CupertinoIcons.star_fill)),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Scaffold(
+        body: Column(
+          children: [
+            SizedBox(height: MediaQuery.of(context).viewPadding.top),
+            Expanded(
+              child: DefaultTabController(
+                length: 2,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    ImageSearchListView(),
+                    FavoriteListView(),
+                  ],
+                ),
+              ),
+            ),
+            buildTabBar(),
+          ],
+        ),
       ),
     );
   }

@@ -6,15 +6,13 @@ import 'package:http/http.dart' as http;
 
 import '../models/image_item.dart';
 
-class KakaoApis {
+class ImageRepository {
   final _kakaoApiUrl = "dapi.kakao.com";
   final _imageSearchPath = "/v2/search/image";
-
   final _restAPIKey = dotenv.env['KAKAO_REST_KEY'];
 
   Map<String, String> getHeader() {
     Map<String, String> headers = {};
-    headers["X-NCP-APIGW-API-KEY-ID"] = "92tjl5ggwl";
     headers["Authorization"] = "KakaoAK $_restAPIKey";
 
     return headers;
@@ -23,8 +21,6 @@ class KakaoApis {
   Future<ImageSearchResponse?> getImageItems(Map<String, dynamic> params) async {
     var url = Uri.https(_kakaoApiUrl, _imageSearchPath, params);
 
-    // debugPrint("url $url");
-
     var response = await http.get(url, headers: getHeader());
     var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
@@ -32,15 +28,12 @@ class KakaoApis {
       if (jsonResponse == null) {
         return null;
       }
-
       // debugPrint("getImageItems() ${jsonResponse.toString()}");
-
       ImageSearchResponse result = ImageSearchResponse.fromJson(jsonResponse);
       return result;
     } else {
       debugPrint('[Error] getImageItems() response Error $jsonResponse');
     }
-
     return null;
   }
 }

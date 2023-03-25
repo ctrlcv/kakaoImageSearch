@@ -3,10 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:threedotthree/pages/image_view_page.dart';
+import 'package:threedotthree/views/pages/main_page.dart';
 
 import 'models/image_item.dart';
-import 'pages/main_page.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -32,18 +31,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: '삼쩜삼',
+      title: 'KAKAO 이미지 조회',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      getPages: [
-        GetPage(name: "/", page: () => const MainPage()),
-        GetPage(name: MainPage.routeName, page: () => const MainPage()),
-        GetPage(name: ImageViewPage.routeName, page: () => const ImageViewPage()),
-      ],
       home: const MainPage(),
     );
   }

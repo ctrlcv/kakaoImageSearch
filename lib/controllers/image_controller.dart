@@ -11,6 +11,7 @@ class ImageController extends GetxController {
   int _pageIndex = 0;
   bool _isEnd = false;
   bool _isLoading = false;
+  bool _isNoItem = false;
   String _searchWord = "";
   double _scrollOffset = 0;
 
@@ -20,18 +21,14 @@ class ImageController extends GetxController {
   int get pageIndex => _pageIndex;
   bool get isEndPage => _isEnd;
   bool get isLoading => _isLoading;
+  bool get isNoItem => _isNoItem;
   String get searchWord => _searchWord;
   double get scrollOffset => _scrollOffset;
 
   Future getImages(String searchWord) async {
+    // 검색어가 비어 있을 경우: 상태값을 초기화한다.
     if (searchWord.isEmpty) {
-      _totalImageCount = 0;
-      _pageableCount = 0;
-      _pageIndex = 0;
-      _isEnd = false;
-
-      _imageList = [];
-      _searchWord = "";
+      initialVariables();
       update();
       return;
     }
@@ -43,19 +40,13 @@ class ImageController extends GetxController {
     _isLoading = true;
     update();
 
+    // 검색어가 변경되었을 때: 상태값을 초기화한다.
     if (_searchWord != searchWord) {
-      _totalImageCount = 0;
-      _pageableCount = 0;
-      _pageIndex = 0;
-      _isEnd = false;
-
-      _imageList = [];
+      initialVariables();
       _searchWord = searchWord;
     }
 
     _pageIndex++;
-
-    debugPrint("ImageController.getImages()");
 
     Map<String, dynamic> params = {};
     params['query'] = searchWord;
@@ -70,13 +61,29 @@ class ImageController extends GetxController {
       if (imageSearchResponse.documents!.isNotEmpty) {
         _imageList.addAll(imageSearchResponse.documents!);
       }
+
+      debugPrint("ImageController.getImages() _totalImageCount $_totalImageCount _pageIndex $_pageIndex");
     }
 
+    _isNoItem = (_totalImageCount == 0);
     _isLoading = false;
     update();
   }
 
   void setScrollOffset(double offset) {
     _scrollOffset = offset;
+  }
+
+  void initialVariables() {
+    _totalImageCount = 0;
+    _pageableCount = 0;
+    _pageIndex = 0;
+    _scrollOffset = 0.0;
+    _isEnd = false;
+    _isLoading = false;
+    _isNoItem = false;
+
+    _imageList = [];
+    _searchWord = "";
   }
 }

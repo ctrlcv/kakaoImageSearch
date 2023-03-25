@@ -6,9 +6,11 @@ import '../repository/favorite_repository.dart';
 class FavoriteController extends GetxController {
   bool _isLoading = false;
   List<ImageItem> _favoriteImageList = [];
+  double _scrollOffset = 0;
 
   List<ImageItem> get favoriteImageList => _favoriteImageList;
   bool get isLoading => _isLoading;
+  double get scrollOffset => _scrollOffset;
 
   @override
   void onInit() {
@@ -44,10 +46,15 @@ class FavoriteController extends GetxController {
         break;
       }
     }
+
     update();
   }
 
   bool isFavoriteItem(String hashKey) {
     return FavoriteRepository().isFavoriteItem(hashKey);
+  }
+
+  void setScrollOffset(double offset) {
+    _scrollOffset = offset;
   }
 }

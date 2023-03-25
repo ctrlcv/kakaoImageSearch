@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.foriton.three.three.threedotthree">
    <application
-        android:label="threedotthree"
+        android:label="카카오 이미지 검색"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

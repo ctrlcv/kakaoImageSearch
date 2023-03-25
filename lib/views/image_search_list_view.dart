@@ -6,6 +6,7 @@ import 'package:threedotthree/controllers/image_controller.dart';
 import 'image_list_view.dart';
 
 class ImageSearchListView extends StatefulWidget {
+  //
   const ImageSearchListView({Key? key}) : super(key: key);
 
   @override
@@ -24,23 +25,25 @@ class _ImageSearchListViewState extends State<ImageSearchListView> {
     _scrollController.addListener(scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Tab 간 이동시 검색어 및 scroll 상태값 복원
       final imageController = Get.find<ImageController>();
       _searchEditController.text = imageController.searchWord;
-      _scrollController.jumpTo(imageController.scrollOffset);
-    });
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
+      if (_searchEditController.text.isNotEmpty && imageController.imageList.isNotEmpty) {
+        _scrollController.jumpTo(imageController.scrollOffset);
+      }
+    });
   }
 
   void scrollListener() async {
     final imageController = Get.find<ImageController>();
 
     double offset = ((_scrollController.offset) / 100).floor() * 100;
+
+    // 이후 복원을 위해 현재 scroll 위치값을 저장
     imageController.setScrollOffset(_scrollController.offset);
 
+    // 100 단위로 scroll 될때마다 확인
     if (offset != _currentOffset) {
       _currentOffset = offset;
 
@@ -48,8 +51,7 @@ class _ImageSearchListViewState extends State<ImageSearchListView> {
         double reloadOffset =
             _scrollController.position.maxScrollExtent - (((MediaQuery.of(context).size.width - 40) / 2) * 8);
 
-        // debugPrint("offset $offset reloadOffset $reloadOffset, max ${_scrollController.position.maxScrollExtent}");
-
+        // 현재 scroll 위치가 전체 scroll 에서 사진 8 개의 높이 이하로 왔을 때: 동일 검색어로 다음 PageIndex 의 사진을 조회한다.
         if (offset >= reloadOffset) {
           if (imageController.isEndPage == false) {
             debugPrint("load more!!!!");
@@ -69,6 +71,7 @@ class _ImageSearchListViewState extends State<ImageSearchListView> {
         decoration: InputDecoration(
           suffixIcon: GestureDetector(
             onTap: () {
+              // 검색창을 지우고 조회시 초기화하게 처리
               // if (_searchEditController.text.isEmpty) {
               //   return;
               // }
@@ -102,6 +105,7 @@ class _ImageSearchListViewState extends State<ImageSearchListView> {
           ),
         ),
         onFieldSubmitted: (value) {
+          // 검색창을 지우고 조회시 초기화하게 처리
           // if (value.isEmpty) {
           //   return;
           // }
@@ -121,10 +125,42 @@ class _ImageSearchListViewState extends State<ImageSearchListView> {
           child: GetBuilder<ImageController>(
             init: Get.find<ImageController>(),
             builder: (controller) {
-              return ImageListView(
-                imageList: controller.imageList,
-                scrollController: _scrollController,
-              );
+              return (controller.isNoItem == false && controller.imageList.isEmpty)
+                  ? const Center(
+                      child: Text(
+                        "검색어를 입력하세요",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  : controller.isNoItem
+                      ? const Center(
+                          child: Text(
+                            "검색 결과가 없습니다",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : Stack(
+                          children: [
+                            ImageListView(
+                              imageList: controller.imageList,
+                              scrollController: _scrollController,
+                            ),
+                            if (controller.isLoading)
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF407BFF)),
+                                ),
+                              ),
+                          ],
+                        );
             },
           ),
         ),

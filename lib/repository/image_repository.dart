@@ -21,18 +21,23 @@ class ImageRepository {
   Future<ImageSearchResponse?> getImageItems(Map<String, dynamic> params) async {
     var url = Uri.https(_kakaoApiUrl, _imageSearchPath, params);
 
-    var response = await http.get(url, headers: getHeader());
-    var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+    try {
+      var response = await http.get(url, headers: getHeader());
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
-    if (response.statusCode == 200) {
-      if (jsonResponse == null) {
+        if (jsonResponse == null) {
+          return null;
+        }
+        // debugPrint("getImageItems() ${jsonResponse.toString()}");
+        ImageSearchResponse result = ImageSearchResponse.fromJson(jsonResponse);
+        return result;
+      } else {
+        debugPrint('[Error] getImageItems() response.statusCode ${response.statusCode}');
         return null;
       }
-      // debugPrint("getImageItems() ${jsonResponse.toString()}");
-      ImageSearchResponse result = ImageSearchResponse.fromJson(jsonResponse);
-      return result;
-    } else {
-      debugPrint('[Error] getImageItems() response Error $jsonResponse');
+    } catch (e) {
+      debugPrint("[Error] getImageItems() Exception ${e.toString()}");
     }
     return null;
   }

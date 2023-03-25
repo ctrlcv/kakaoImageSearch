@@ -12,12 +12,27 @@ class ImageListView extends StatelessWidget {
     Key? key,
     required this.scrollController,
     required this.imageList,
+    this.emptyMessage = "표시할 항목이 없습니다",
   }) : super(key: key);
   final ScrollController scrollController;
   final List<ImageItem> imageList;
+  final String emptyMessage;
 
   @override
   Widget build(BuildContext context) {
+    if (imageList.isEmpty) {
+      return Center(
+        child: Text(
+          emptyMessage,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
+
     return ListView.builder(
       controller: scrollController,
       padding: const EdgeInsets.symmetric(vertical: 6),

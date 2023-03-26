@@ -33,7 +33,7 @@ class ImageController extends GetxController {
       return;
     }
 
-    if (_isEnd) {
+    if (_isEnd && _searchWord == searchWord) {
       return;
     }
 
@@ -61,9 +61,9 @@ class ImageController extends GetxController {
       if (imageSearchResponse.documents!.isNotEmpty) {
         _imageList.addAll(imageSearchResponse.documents!);
       }
-
-      debugPrint("ImageController.getImages() _totalImageCount $_totalImageCount _pageIndex $_pageIndex");
     }
+
+    debugPrint("ImageController.getImages() _totalImageCount $_totalImageCount _pageIndex $_pageIndex");
 
     _isNoItem = (_totalImageCount == 0);
     _isLoading = false;

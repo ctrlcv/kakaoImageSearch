@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -86,6 +88,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               ),
             ),
             buildTabBar(),
+            SizedBox(height: Platform.isIOS ? 36 : 0),
           ],
         ),
       ),

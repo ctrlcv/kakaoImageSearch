@@ -7,6 +7,7 @@ import 'package:threedotthree/views/image_search_list_view.dart';
 
 import '../../controllers/favorite_controller.dart';
 import '../../controllers/image_controller.dart';
+import '../../controllers/setting_controller.dart';
 import '../favorite_list_view.dart';
 
 class MainPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
     Get.put(ImageController());
     Get.put(FavoriteController());
+    Get.put(SettingController());
 
     super.initState();
   }
@@ -59,7 +61,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           fontWeight: FontWeight.w500,
         ),
         tabs: const [
-          Tab(icon: Icon(CupertinoIcons.list_bullet)),
+          Tab(icon: Icon(CupertinoIcons.search)),
           Tab(icon: Icon(CupertinoIcons.star_fill)),
         ],
       ),

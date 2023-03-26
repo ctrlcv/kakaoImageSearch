@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/favorite_controller.dart';
+import '../controllers/setting_controller.dart';
+import '../models/image_item.dart';
+import 'image_list_vew_ex.dart';
 import 'image_list_view.dart';
 
 class FavoriteListView extends StatefulWidget {
@@ -39,12 +42,26 @@ class _FavoriteListViewState extends State<FavoriteListView> {
     return GetBuilder<FavoriteController>(
       init: Get.find<FavoriteController>(),
       builder: (controller) {
+        List<ImageItem> imageList = controller.favoriteImageList;
+        List<ArrangedImageItem> arrangedItemList = controller.arrangedItemList;
+
         return Stack(
           children: [
-            ImageListView(
-              imageList: controller.favoriteImageList,
-              scrollController: _scrollController,
-              emptyMessage: "즐겨찾기한 항목이 없습니다",
+            GetBuilder<SettingController>(
+              init: Get.find<SettingController>(),
+              builder: (controller) {
+                return controller.isGridMode
+                    ? ImageListView(
+                        imageList: imageList,
+                        scrollController: _scrollController,
+                        emptyMessage: "즐겨찾기한 항목이 없습니다",
+                      )
+                    : ImageListViewEx(
+                        imageList: arrangedItemList,
+                        scrollController: _scrollController,
+                        emptyMessage: "즐겨찾기한 항목이 없습니다",
+                      );
+              },
             ),
             if (controller.isLoading)
               const Center(

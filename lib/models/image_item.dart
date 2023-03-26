@@ -100,3 +100,15 @@ class ImageSearchResponse {
     );
   }
 }
+
+class ArrangedImageItem {
+  bool isFilled;
+  double imageHeight;
+  List<ImageItem> items;
+
+  ArrangedImageItem({
+    required this.isFilled,
+    required this.imageHeight,
+    required this.items,
+  });
+}
